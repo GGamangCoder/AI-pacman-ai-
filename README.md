@@ -1,2 +1,2 @@
-# Artificial_Intelligence
-Artificial Intelligence
+# Pacman-Artificial-Intelligence  
+Artificial Intelligence Project for Pacman
