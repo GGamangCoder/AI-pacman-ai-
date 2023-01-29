@@ -17,7 +17,6 @@
 import cgi
 import time
 import sys
-import json
 import traceback
 import pdb
 from collections import defaultdict
@@ -25,8 +24,7 @@ import util
 
 class Grades:
   "A data structure for project grades, along with formatting code to display them"
-  def __init__(self, projectName, questionsAndMaxesList,
-               gsOutput=False, edxOutput=False, muteOutput=False):
+  def __init__(self, projectName, questionsAndMaxesList, edxOutput=False, muteOutput=False):
     """
     Defines the grading scheme for a project
       projectName: project name
@@ -41,7 +39,6 @@ class Grades:
     self.sane = True # Sanity checks
     self.currentQuestion = None # Which question we're grading
     self.edxOutput = edxOutput
-    self.gsOutput = gsOutput  # GradeScope output
     self.mute = muteOutput
     self.prereqs = defaultdict(set)
 
@@ -75,7 +72,7 @@ class Grades:
 
       if self.mute: util.mutePrint()
       try:
-        util.TimeoutFunction(getattr(gradingModule, q),1800)(self) # Call the question's function
+        util.TimeoutFunction(getattr(gradingModule, q),300)(self) # Call the question's function
         #TimeoutFunction(getattr(gradingModule, q),1200)(self) # Call the question's function
       except Exception, inst:
         self.addExceptionMessage(q, inst, traceback)
@@ -138,8 +135,6 @@ to follow your instructor's guidelines to receive credit on your project.
 
     if self.edxOutput:
         self.produceOutput()
-    if self.gsOutput:
-        self.produceGradeScopeOutput()
 
   def addExceptionMessage(self, q, inst, traceback):
     """
@@ -173,42 +168,6 @@ to follow your instructor's guidelines to receive credit on your project.
     for line in errorHint.split('\n'):
       self.addMessage(line)
 
-  def produceGradeScopeOutput(self):
-    out_dct = {}
-
-    # total of entire submission
-    total_possible = sum(self.maxes.values())
-    total_score = sum(self.points.values())
-    out_dct['score'] = total_score
-    out_dct['max_score'] = total_possible
-    out_dct['output'] = "Total score (%d / %d)" % (total_score, total_possible)
-
-    # individual tests
-    tests_out = []
-    for name in self.questions:
-      test_out = {}
-      # test name
-      test_out['name'] = name
-      # test score
-      test_out['score'] = self.points[name]
-      test_out['max_score'] = self.maxes[name]
-      # others
-      is_correct = self.points[name] >= self.maxes[name]
-      test_out['output'] = "  Question {num} ({points}/{max}) {correct}".format(
-          num=(name[1] if len(name) == 2 else name),
-          points=test_out['score'],
-          max=test_out['max_score'],
-          correct=('X' if not is_correct else ''),
-      )
-      test_out['tags'] = []
-      tests_out.append(test_out)
-    out_dct['tests'] = tests_out
-
-    # file output
-    with open('gradescope_response.json', 'w') as outfile:
-        json.dump(out_dct, outfile)
-    return
-
   def produceOutput(self):
     edxOutput = open('edx_response.html', 'w')
     edxOutput.write("<div>")
@@ -235,7 +194,7 @@ to follow your instructor's guidelines to receive credit on your project.
       else:
           name = q
       checkOrX = '<span class="incorrect"/>'
-      if (self.points[q] >= self.maxes[q]):
+      if (self.points[q] == self.maxes[q]):
         checkOrX = '<span class="correct"/>'
       #messages = '\n<br/>\n'.join(self.messages[q])
       messages = "<pre>%s</pre>" % '\n'.join(self.messages[q])

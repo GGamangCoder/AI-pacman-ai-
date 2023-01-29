@@ -1,2 +1,2 @@
-class: "PassAllTestsQuestion"
-max_points: "3"
+max_points: "5"
+class: "NumberPassedQuestion"

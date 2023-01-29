@@ -12,7 +12,7 @@
 # Pieter Abbeel (pabbeel@cs.berkeley.edu).
 
 
-STUDENT_CODE_DEFAULT = 'searchAgents.py,search.py'
-PROJECT_TEST_CLASSES = 'searchTestClasses.py'
-PROJECT_NAME = 'Project 1: Search'
+STUDENT_CODE_DEFAULT = 'analysis.py,qlearningAgents.py,valueIterationAgents.py'
+PROJECT_TEST_CLASSES = 'reinforcementTestClasses.py'
+PROJECT_NAME = 'Project 3: Reinforcement learning'
 BONUS_PIC = False

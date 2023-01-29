@@ -61,23 +61,6 @@ class PassAllTestsQuestion(Question):
         else:
             grades.assignFullCredit()
 
-class ExtraCreditPassAllTestsQuestion(Question):
-    def __init__(self, questionDict, display):
-        Question.__init__(self, questionDict, display)
-        self.extraPoints = int(questionDict['extra_points'])
-
-    def execute(self, grades):
-        # TODO: is this the right way to use grades?  The autograder doesn't seem to use it.
-        testsFailed = False
-        grades.assignZeroCredit()
-        for _, f in self.testCases:
-            if not f(grades):
-                testsFailed = True
-        if testsFailed:
-            grades.fail("Tests failed.")
-        else:
-            grades.assignFullCredit()
-            grades.addPoints(self.extraPoints)
 
 # Question in which predict credit is given for test cases with a ``points'' property.
 # All other tests are mandatory and must be passed.

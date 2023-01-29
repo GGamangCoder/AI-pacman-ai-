@@ -35,8 +35,8 @@ Download project files through git clone (try to learn git:  https://rogerdudler
 Throughout project, try to commit your changes by git commit -m "change message" so we can track your changes (at least for each task)
 
 ```console
-$git clone https://github.com/leeymcj/pacman.git
-$cd pacman
+$git clone https://github.com/leeymcj/pacman-ai.git
+$cd pacman-ai
 ```
 You should be able to play a game of Pacman by typing the following at the command line (note the left key is a right key is d) : 
 
